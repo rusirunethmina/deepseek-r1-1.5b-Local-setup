@@ -1,1 +1,4 @@
-setup deepseek-r1:1.5b in local machine simple web UI - UI - HTML & tailwindcss | Backend - python (Flask)
+setup deepseek-r1:1.5b in local machine simple web UI - UI - HTML & tailwindcss | Backend - python (Flask) & ollama
+
+
+Ollama is a platform that enables users to run large language models (LLMs) locally on their machines, supporting models like Llama 3.3, DeepSeek-R1, Phi-4, Mistral, and Gemma 2.
