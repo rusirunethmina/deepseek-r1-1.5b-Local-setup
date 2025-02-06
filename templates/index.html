@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center h-screen">
+    <div class="w-full max-w-2xl bg-gray-800 rounded-lg shadow-lg p-4 flex flex-col h-[80vh]">
+        <h2 class="text-2xl font-bold text-center mb-2">Chat with Ollama</h2>
+        
+        <!-- Chat Display -->
+        <div id="chat-container" class="flex-1 overflow-y-auto space-y-3 p-2 border border-gray-700 rounded-md">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="mt-4 flex items-center">
+            <input type="text" id="prompt" class="flex-1 bg-gray-700 text-white p-2 rounded-md outline-none" placeholder="Type a message...">
+            <button onclick="sendPrompt()" class="ml-2 bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendPrompt() {
+            const inputField = document.getElementById("prompt");
+            const chatContainer = document.getElementById("chat-container");
+
+            const userMessage = inputField.value.trim();
+            if (!userMessage) return;
+
+            // Append user message
+            chatContainer.innerHTML += `<div class="text-right"><span class="bg-blue-500 p-2 rounded-md">${userMessage}</span></div>`;
+
+            // Show loading animation
+            const loadingMessage = document.createElement("div");
+            loadingMessage.innerHTML = `<span class="text-gray-400">Thinking...</span>`;
+            chatContainer.appendChild(loadingMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Send request
+            const res = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: userMessage })
+            });
+
+            const data = await res.json();
+            loadingMessage.remove(); // Remove loading animation
+
+            // Append AI response
+            chatContainer.innerHTML += `<div class="text-left"><span class="bg-gray-600 p-2 rounded-md">${data.response || data.error}</span></div>`;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            inputField.value = ""; // Clear input
+        }
+    </script>
+</body>
+</html>
